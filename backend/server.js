@@ -7,8 +7,10 @@ const app = express();
 
 // ✅ Configure CORS to Allow Netlify
 app.use(cors({
-  origin: ["https://heroic-brioche-f89f8f.netlify.app", "http://localhost:3000"], // Replace with your actual Netlify frontend URL
-  credentials: true
+  origin: ["https://heroic-brioche-f89f8f.netlify.app", "http://localhost:3000", "http://localhost:3002"], // ✅ Add all possible frontend origins
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json()); // Parse JSON request bodies
