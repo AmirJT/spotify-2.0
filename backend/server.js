@@ -5,8 +5,12 @@ const sequelize = require("./config/database");
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// ✅ FIX: Configure CORS to Allow Netlify
+app.use(cors({
+  origin: ["https://your-netlify-app.netlify.app", "http://localhost:3000"], // Replace with your actual Netlify frontend URL
+  credentials: true
+}));
+
 app.use(express.json());
 
 // Debugging route registration
@@ -45,5 +49,5 @@ sequelize
 // Start the Server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://0.0.0.0:${PORT}`); // ✅ Ensure it's accessible remotely
 });
