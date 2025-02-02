@@ -1,0 +1,44 @@
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+  
+  .form-control:focus {
+    border-color: #1DB954;
+    box-shadow: 0 0 5px rgba(29, 185, 84, 0.8);
+  }
+  
+  :root {
+    --bg-color: #ffffff;
+    --card-bg: #f8f9fa;
+    --text-color: #000000;
+  }
+  
+  .dark-mode {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #ffffff;
+  }
+  
+  button {
+    transition: all 0.3s ease;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+  }
+  

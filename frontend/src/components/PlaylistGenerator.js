@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 import './PlaylistGenerator.css';
 
 const PlaylistGenerator = () => {
   const [mood, setMood] = useState('');
+  const [genre, setGenre] = useState('');
+  const [activity, setActivity] = useState('');
   const [playlist, setPlaylist] = useState([]);
   const [savedPlaylists, setSavedPlaylists] = useState([]);
-  const userId = 1; // Hardcoded user ID for now
+  const userId = 1;
 
-  // Fetch saved playlists
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
@@ -18,84 +24,95 @@ const PlaylistGenerator = () => {
         console.error('Failed to fetch saved playlists', error);
       }
     };
-
     fetchPlaylists();
   }, [userId]);
 
-  // Generate a new playlist
   const handleGeneratePlaylist = async () => {
     try {
       const response = await axios.post('http://localhost:5001/api/playlist/generate', {
         userId,
         mood,
+        genre,
+        activity,
       });
-      setPlaylist(response.data.playlist.songs); // Access songs from generated playlist
+      setPlaylist(response.data.playlist.songs);
     } catch (error) {
       console.error('Failed to generate playlist', error);
     }
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Playlist Generator</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Enter your mood"
-          value={mood}
-          onChange={(e) => setMood(e.target.value)}
-          style={{ marginRight: '10px', padding: '5px' }}
-        />
-        <button onClick={handleGeneratePlaylist} style={{ padding: '5px 10px' }}>
-          Generate Playlist
-        </button>
-      </div>
-
-      {/* Generated Playlist */}
-      {playlist.length > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Generated Playlist</h3>
-          {playlist.map((song, index) => (
-            <div key={index} style={{ marginBottom: '10px' }}>
-              <strong>{song.title}</strong> by {song.artist}
-              <br />
-              <a href={song.spotifyUrl} target="_blank" rel="noopener noreferrer">
-                Listen on Spotify
-              </a>
-              {song.albumArt && (
-                <div>
-                  <img src={song.albumArt} alt={`${song.title} album art`} style={{ maxWidth: '100px' }} />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Saved Playlists */}
-      <div style={{ marginTop: '40px' }}>
-        <h3>Saved Playlists</h3>
-        {savedPlaylists.length > 0 ? (
-          savedPlaylists.map((savedPlaylist) => (
-            <div key={savedPlaylist.id} style={{ marginBottom: '20px' }}>
-              <h4>{savedPlaylist.name}</h4>
-              <p>{savedPlaylist.description}</p>
-              {savedPlaylist.songs.map((song, index) => (
-                <div key={index} style={{ marginLeft: '20px', marginBottom: '10px' }}>
-                  <strong>{song.title}</strong> by {song.artist}
-                  <br />
-                  <a href={song.spotifyUrl} target="_blank" rel="noopener noreferrer">
-                    Listen on Spotify
-                  </a>
-                </div>
+    <Container className="playlist-container">
+      <Card className="playlist-card p-4 shadow-lg">
+        <h2 className="text-center">Playlist Generator</h2>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Enter your mood</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Happy, Chill, Energetic..."
+              value={mood}
+              onChange={(e) => setMood(e.target.value)}
+            />
+            </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Activity Type</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Workout, Studying, Relaxing..."
+              value={activity}
+              onChange={(e) => setActivity(e.target.value)}
+            />
+          </Form.Group>
+          <Button variant="success" className="w-100" onClick={handleGeneratePlaylist}>
+            Generate Playlist
+          </Button>
+        </Form>
+        {playlist.length > 0 && (
+          <div className="mt-4">
+            <h3>Generated Playlist</h3>
+            <ListGroup>
+              {playlist.map((song, index) => (
+                <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{song.title}</strong> by {song.artist}
+                    <br />
+                    <a href={song.spotifyUrl} target="_blank" rel="noopener noreferrer">
+                      Listen on Spotify
+                    </a>
+                  </div>
+                  {song.albumArt && <img src={song.albumArt} alt="Album Art" className="album-art" />}
+                </ListGroup.Item>
               ))}
-            </div>
-          ))
-        ) : (
-          <p>No saved playlists found.</p>
+            </ListGroup>
+          </div>
         )}
-      </div>
-    </div>
+        <div className="mt-4">
+          <h3>Saved Playlists</h3>
+          {savedPlaylists.length > 0 ? (
+            savedPlaylists.map((savedPlaylist) => (
+              <Card key={savedPlaylist.id} className="mb-3 p-3">
+                <h4>{savedPlaylist.name}</h4>
+                <p>{savedPlaylist.description}</p>
+                <ListGroup>
+                  {savedPlaylist.songs.map((song, index) => (
+                    <ListGroup.Item key={index}>
+                      <strong>{song.title}</strong> by {song.artist}
+                      <br />
+                      <a href={song.spotifyUrl} target="_blank" rel="noopener noreferrer">
+                        Listen on Spotify
+                      </a>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Card>
+            ))
+          ) : (
+            <p>No saved playlists found.</p>
+          )}
+        </div>
+      </Card>
+    </Container>
   );
 };
 

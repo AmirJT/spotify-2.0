@@ -11,3 +11,59 @@
       opacity: 1;
     }
   }
+
+.playlist-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.playlist-card {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.form-control:focus {
+  border-color: #1DB954;
+  box-shadow: 0 0 5px rgba(29, 185, 84, 0.8);
+}
+
+:root {
+  --bg-color: #ffffff;
+  --card-bg: #f8f9fa;
+  --text-color: #000000;
+}
+
+.dark-mode {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-color: #ffffff;
+}
+
+.list-group-item {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: none;
+}
+
+.album-art {
+  width: 75px;
+  height: 75px;
+  border-radius: 5px;
+}
+
+button {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
