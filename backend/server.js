@@ -9,7 +9,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000", 
     "http://localhost:3001", 
-    "https://your-deployed-frontend-url.com"
+    "https://spotifyplaylistgenerator2.netlify.app"
   ],
   credentials: true, 
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
