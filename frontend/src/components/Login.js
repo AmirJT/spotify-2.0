@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
+import apiBaseUrl from '../api'; 
 import './Login.css';
 
 const Login = ({ setIsLoggedIn }) => {
@@ -24,16 +25,22 @@ const Login = ({ setIsLoggedIn }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', {
-        username, 
-        password, 
+      const response = await axios.post(`${apiBaseUrl}/api/auth/login`, {
+        username,
+        password,
       });
+
+      console.log('Login Response:', response.data);
+
       if (response.data.message === 'Login successful') {
         setIsLoggedIn(true);
         navigate('/playlist');
+      } else {
+        setError('Invalid credentials.');
       }
     } catch (error) {
-      setError('Invalid username or password.');
+      console.error('Login Error:', error.response?.data || error.message);
+      setError(error.response?.data?.message || 'Failed to log in. Please try again.');
     }
   };
 
@@ -51,7 +58,9 @@ const Login = ({ setIsLoggedIn }) => {
       <Card className="login-card p-4 shadow-lg">
         <Card.Body>
           <h2 className="text-center">Welcome to Playlist Generator</h2>
-          <p className="text-center text-muted">Discover and generate the perfect playlists based on your mood.</p>
+          <p className="text-center text-muted">
+            Discover and generate the perfect playlists based on your mood.
+          </p>
           {error && <p className="text-danger text-center">{error}</p>}
           <Form onSubmit={handleLogin}>
             <Form.Group className="mb-3">
@@ -74,12 +83,18 @@ const Login = ({ setIsLoggedIn }) => {
                 required
               />
             </Form.Group>
-            <Button variant="success" type="submit" className="w-100">Login</Button>
+            <Button variant="success" type="submit" className="w-100">
+              Login
+            </Button>
           </Form>
-          <p className="text-center mt-3 text-muted">Create personalized playlists based on your mood and save them for later.</p>
+          <p className="text-center mt-3 text-muted">
+            Create personalized playlists based on your mood and save them for later.
+          </p>
           <p className="text-center mt-3">
-            Don't have an account? 
-            <Button variant="link" className="p-0 text-primary" onClick={() => setShowSignup(true)}>Create an Account</Button>
+            Don't have an account?
+            <Button variant="link" className="p-0 text-primary" onClick={() => setShowSignup(true)}>
+              Create an Account
+            </Button>
           </p>
         </Card.Body>
       </Card>

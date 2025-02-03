@@ -1,4 +1,3 @@
-// frontend/src/PlaylistGenerator.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
@@ -6,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import apiBaseUrl from '../api'; 
 import './PlaylistGenerator.css';
 
 const PlaylistGenerator = () => {
@@ -15,7 +15,6 @@ const PlaylistGenerator = () => {
   const [generatedPlaylist, setGeneratedPlaylist] = useState([]);
   const [savedPlaylists, setSavedPlaylists] = useState([]);
   const userId = 1; 
-  const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
   useEffect(() => {
     const fetchSavedPlaylists = async () => {
@@ -24,11 +23,11 @@ const PlaylistGenerator = () => {
         console.log('Fetch saved playlists response:', response.data);
         setSavedPlaylists(response.data.playlists || []);
       } catch (error) {
-        console.error('Failed to fetch saved playlists', error);
+        console.error('Failed to fetch saved playlists:', error.response?.data || error.message);
       }
     };
     fetchSavedPlaylists();
-  }, [apiBaseUrl, userId]);
+  }, [userId]);
 
   const handleGeneratePlaylist = async () => {
     try {
@@ -42,7 +41,7 @@ const PlaylistGenerator = () => {
       console.log('Generate playlist response:', response.data);
       setGeneratedPlaylist(response.data.playlist?.songs || []);
     } catch (error) {
-      console.error('Failed to generate playlist', error);
+      console.error('Failed to generate playlist:', error.response?.data || error.message);
     }
   };
 

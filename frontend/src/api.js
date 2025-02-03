@@ -1,9 +1,3 @@
-export const fetchData = async () => {
-  try {
-    const response = await fetch('http://localhost:5001/api/playlist/user/1');    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
-  }
-};
+const apiBaseUrl = process.env.REACT_APP_API_URL || "https://spotify-2-0-pqil.onrender.com"; 
+
+export default apiBaseUrl;

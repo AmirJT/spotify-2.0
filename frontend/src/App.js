@@ -7,7 +7,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import './App.css';
-import { fetchData } from './api';
+import apiBaseUrl from './api'; 
+import axios from 'axios';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,7 +24,14 @@ function App() {
   }, [darkMode]);
 
   useEffect(() => {
-    fetchData().then(setData).catch(console.error);
+    axios.get(`${apiBaseUrl}/api/some-endpoint`) 
+      .then((response) => {
+        setData(response.data);
+        console.log("Fetched Data:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error.response?.data || error.message);
+      });
   }, []);
 
   return (
@@ -38,13 +46,14 @@ function App() {
           </Button>
         </Container>
       </Navbar>
+
       <div className="content-wrapper">
         <Routes>
           <Route path="/" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-          <Route path="/playlist" element={<PlaylistGenerator />} />
+          <Route path="/playlist" element={isLoggedIn ? <PlaylistGenerator /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
       </div>
-      
+
       <div className="data-display">
         <h1>My React App Data</h1>
         {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading...'}

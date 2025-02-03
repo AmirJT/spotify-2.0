@@ -1,3 +1,3 @@
-import { fetchData } from './api';
-const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-export default apiUrl;
+import apiBaseUrl from "./api"; 
+
+export default apiBaseUrl;
