@@ -1,3 +1,4 @@
+// frontend/src/PlaylistGenerator.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Container from 'react-bootstrap/Container';
@@ -11,31 +12,35 @@ const PlaylistGenerator = () => {
   const [mood, setMood] = useState('');
   const [genre, setGenre] = useState('');
   const [activity, setActivity] = useState('');
-  const [playlist, setPlaylist] = useState([]);
+  const [generatedPlaylist, setGeneratedPlaylist] = useState([]);
   const [savedPlaylists, setSavedPlaylists] = useState([]);
-  const userId = 1;
+  const userId = 1; 
+  const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
 
   useEffect(() => {
-    const fetchPlaylists = async () => {
+    const fetchSavedPlaylists = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/playlist/user/${userId}`);
-        setSavedPlaylists(response.data.playlists);
+        const response = await axios.get(`${apiBaseUrl}/api/playlist/user/${userId}`);
+        console.log('Fetch saved playlists response:', response.data);
+        setSavedPlaylists(response.data.playlists || []);
       } catch (error) {
         console.error('Failed to fetch saved playlists', error);
       }
     };
-    fetchPlaylists();
-  }, [userId]);
+    fetchSavedPlaylists();
+  }, [apiBaseUrl, userId]);
 
   const handleGeneratePlaylist = async () => {
     try {
-      const response = await axios.post('http://localhost:5001/api/playlist/generate', {
+      console.log('Attempting to generate playlist with:', { userId, mood, genre, activity });
+      const response = await axios.post(`${apiBaseUrl}/api/playlist/generate`, {
         userId,
         mood,
         genre,
         activity,
       });
-      setPlaylist(response.data.playlist.songs);
+      console.log('Generate playlist response:', response.data);
+      setGeneratedPlaylist(response.data.playlist?.songs || []);
     } catch (error) {
       console.error('Failed to generate playlist', error);
     }
@@ -54,7 +59,16 @@ const PlaylistGenerator = () => {
               value={mood}
               onChange={(e) => setMood(e.target.value)}
             />
-            </Form.Group>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Genre</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Pop, Rock, Hip-Hop..."
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+            />
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Activity Type</Form.Label>
             <Form.Control
@@ -68,11 +82,12 @@ const PlaylistGenerator = () => {
             Generate Playlist
           </Button>
         </Form>
-        {playlist.length > 0 && (
+
+        {generatedPlaylist.length > 0 && (
           <div className="mt-4">
             <h3>Generated Playlist</h3>
             <ListGroup>
-              {playlist.map((song, index) => (
+              {generatedPlaylist.map((song, index) => (
                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
                   <div>
                     <strong>{song.title}</strong> by {song.artist}
@@ -87,15 +102,16 @@ const PlaylistGenerator = () => {
             </ListGroup>
           </div>
         )}
+
         <div className="mt-4">
           <h3>Saved Playlists</h3>
           {savedPlaylists.length > 0 ? (
-            savedPlaylists.map((savedPlaylist) => (
-              <Card key={savedPlaylist.id} className="mb-3 p-3">
-                <h4>{savedPlaylist.name}</h4>
-                <p>{savedPlaylist.description}</p>
+            savedPlaylists.map((playlist) => (
+              <Card key={playlist.id} className="mb-3 p-3">
+                <h4>{playlist.name}</h4>
+                <p>{playlist.description}</p>
                 <ListGroup>
-                  {savedPlaylist.songs.map((song, index) => (
+                  {playlist.songs.map((song, index) => (
                     <ListGroup.Item key={index}>
                       <strong>{song.title}</strong> by {song.artist}
                       <br />

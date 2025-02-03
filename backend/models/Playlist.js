@@ -15,7 +15,7 @@ const Playlist = sequelize.define("Playlist", {
     allowNull: false,
   },
   songs: {
-    type: DataTypes.JSON, // Store songs as JSON
+    type: DataTypes.JSON, 
     allowNull: false,
   },
 });

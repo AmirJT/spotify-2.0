@@ -1,12 +1,10 @@
 const SpotifyWebApi = require("spotify-web-api-node");
 
-// Initialize Spotify API Client
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-// Function to authenticate and get an access token
 const getSpotifyToken = async () => {
   try {
     const data = await spotifyApi.clientCredentialsGrant();
@@ -17,7 +15,6 @@ const getSpotifyToken = async () => {
   }
 };
 
-// Function to search for a track on Spotify
 const searchSpotifyTrack = async (songTitle, artist) => {
   try {
     const response = await spotifyApi.searchTracks(`track:${songTitle} artist:${artist}`, { limit: 1 });
@@ -38,8 +35,7 @@ const searchSpotifyTrack = async (songTitle, artist) => {
   }
 };
 
-// Authenticate Spotify on startup
+
 getSpotifyToken();
 
-// Export functions
 module.exports = { searchSpotifyTrack };

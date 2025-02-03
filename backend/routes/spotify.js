@@ -1,16 +1,14 @@
 const express = require("express");
-const { getAccessToken } = require("../services/spotify"); // Import the utility function
+const { getAccessToken } = require("../services/spotify"); 
 const router = express.Router();
 
-// Spotify Authorization Callback Route
 router.get("/callback", async (req, res) => {
-  const { code } = req.query; // Get the authorization code from query parameters
+  const { code } = req.query;
   if (!code) {
     return res.status(400).json({ error: "Authorization code is required" });
   }
 
   try {
-    // Exchange the authorization code for access and refresh tokens
     const tokens = await getAccessToken(code);
     res.json({
       message: "Access token successfully retrieved",
@@ -23,5 +21,4 @@ router.get("/callback", async (req, res) => {
   }
 });
 
-// Export the router
 module.exports = router;
