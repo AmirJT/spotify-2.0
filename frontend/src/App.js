@@ -53,11 +53,7 @@ function App() {
           <Route path="/playlist" element={isLoggedIn ? <PlaylistGenerator /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
         </Routes>
       </div>
-
-      <div className="data-display">
-        <h1>My React App Data</h1>
-        {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : 'Loading...'}
-      </div>
+            
     </Router>
   );
 }
